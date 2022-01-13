@@ -21,8 +21,8 @@ jobs:
     - uses: azure/docker-login@v1
       with:
         login-server: baseartifacts.azurecr.io
-        username: ${{ secrets.ARM_CLIENT_ID }}
-        password: ${{ secrets.ARM_CLIENT_SECRET }}
+        username: ${{ secrets.ACR_SECRET_ID }}
+        password: ${{ secrets.ACR_SECRET_PWD }}
     - run: |
         docker pull baseartifacts.azurecr.io/php:8.1-stable || true
         docker pull php:8.1
