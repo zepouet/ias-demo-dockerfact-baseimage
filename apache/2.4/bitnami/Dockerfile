@@ -1,1 +1,1 @@
-FROM bitnami/apache:2.4
+FROM busybox
