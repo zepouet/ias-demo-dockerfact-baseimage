@@ -3,5 +3,5 @@ steps:
   - id: build-test-base-image
     build: >
       -f ./Dockerfile
-      -t {{.Run.Registry}}/bitnami/apache:2.4-test
+      -t bitnami/apache:2.4-test
       .
