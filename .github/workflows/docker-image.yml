@@ -9,37 +9,33 @@ on:
 jobs:
 
   build:
-    environment: 'dev'
     runs-on: ubuntu-latest
 
     steps:
     - uses: actions/checkout@v2
-   
-    - name: Build the Docker image
-      run: docker build . --file Dockerfile --tag my-image-name:$(date +%s)
 
-    - uses: azure/login@v1
-      with:
-        creds: ${{ secrets.AZURE_CREDENTIALS }}
-    - run: |
-        az webapp list --query "[?state=='Running']"
-       
+    - name: Build the Docker image
+      working-directory: php/8.1
+      run: docker build . --file Dockerfile --tag baseartifacts.azurecr.io/php:8.1-latest
+
     - uses: azure/docker-login@v1
       with:
-        login-server: acrddockerfactory.azurecr.io
+        login-server: baseartifacts.azurecr.io
         username: ${{ secrets.ARM_CLIENT_ID }}
         password: ${{ secrets.ARM_CLIENT_SECRET }}
     - run: |
-        docker pull acrddockerfactory.azurecr.io/myapp:latest || true
-        docker pull nmuller/nicolas:latest
-        DIGEST1=$(docker images --no-trunc --quiet acrddockerfactory.azurecr.io/myapp:latest)
-        DIGEST2=$(docker images --no-trunc --quiet nmuller/nicolas:latest)
+        docker pull baseartifacts.azurecr.io/php:8.1-stable || true
+        docker pull php:8.1
+        DIGEST1=$(docker images --no-trunc --quiet baseartifacts.azurecr.io/php:8.1-stable)
+        DIGEST2=$(docker images --no-trunc --quiet php:8.1)
         echo "DIGEST1="$DIGEST1
         echo "DIGEST2="$DIGEST2
         if [ "$DIGEST1" != "$DIGEST2" ]; then
           echo DIFF DETECTED PUSHING
-          docker rmi acrddockerfactory.azurecr.io/myapp:latest
-          docker tag nmuller/nicolas:latest acrddockerfactory.azurecr.io/myapp:latest
-          docker push acrddockerfactory.azurecr.io/myapp:latest
+          docker rmi baseartifacts.azurecr.io/php:8.1-stable
+          docker tag php:8.1 baseartifacts.azurecr.io/php:8.1-stable
+          docker push baseartifacts.azurecr.io/php:8.1-stable
           echo PUSHED
+        else
+          echo NO UPDATE found for php:8.1
         fi
