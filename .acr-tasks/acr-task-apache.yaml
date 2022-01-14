@@ -7,7 +7,7 @@ steps:
       .
   - id: validate-base-image
     when: ['build-test-base-image']
-    cmd: "{{.Run.Registry}}/bitnami/apache:2.4-test
+    cmd: "{{.Run.Registry}}/bitnami/apache:2.4-test"
   - id: retag-base-image
     when: ['validate-base-image']
     cmd: docker tag {{.Values.REGISTRY_FROM_URL}}bitnami/apache:2.4 {{.Run.Registry}}/bitnami/apache:2.4-stable
