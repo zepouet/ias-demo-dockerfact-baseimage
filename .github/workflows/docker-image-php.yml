@@ -8,20 +8,32 @@ on:
 
 jobs:
 
-  build:
+  pull-latest:
+    name: Pull the latest from wild world
     runs-on: ubuntu-latest
-
     steps:
-    - uses: actions/checkout@v2
-
+    - name: checkout
+      uses: actions/checkout@v2
     #- name: Build the Docker image
     #  working-directory: php/8.1/debian
     #  run: docker build . --file Dockerfile --tag baseartifacts.azurecr.io/php:8.1-latest
-
-    - uses: azure/docker-login@v1
+    - name: pull-check-push
+      uses: azure/docker-login@v1
       with:
         login-server: baseartifacts.azurecr.io
         username: ${{ secrets.ACR_SECRET_ID }}
         password: ${{ secrets.ACR_SECRET_PWD }}
     - run: |
         bash .github/workflows/pull-check-push.sh
+
+  scan-test:
+    name: Run Trivy vulnerability scanner
+    steps:
+    - uses: aquasecurity/trivy-action@master
+      with:
+        image-ref: 'baseartifacts.azurecr.io/php:8.1-test'
+        format: 'table'
+        exit-code: '1'
+        ignore-unfixed: true
+        vuln-type: 'os,library'
+        severity: 'UNKNOWN,LOW,MEDIUM,HIGH,CRITICAL'

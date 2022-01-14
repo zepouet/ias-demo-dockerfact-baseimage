@@ -1,8 +1,8 @@
 #!/usr/bin/env bash
 
-docker pull baseartifacts.azurecr.io/php:8.1-stable || true
+docker pull baseartifacts.azurecr.io/php:8.1-test || true
 docker pull php:8.1
-DIGEST1=$(docker images --no-trunc --quiet baseartifacts.azurecr.io/php:8.1-stable)
+DIGEST1=$(docker images --no-trunc --quiet baseartifacts.azurecr.io/php:8.1-test)
 DIGEST2=$(docker images --no-trunc --quiet php:8.1)
 echo "DIGEST1="$DIGEST1
 echo "DIGEST2="$DIGEST2
