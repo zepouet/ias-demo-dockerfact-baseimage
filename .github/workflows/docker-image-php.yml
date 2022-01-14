@@ -24,4 +24,4 @@ jobs:
         username: ${{ secrets.ACR_SECRET_ID }}
         password: ${{ secrets.ACR_SECRET_PWD }}
     - run: |
-        bash ./github/workflows/pull-check-push.sh
+        bash .github/workflows/pull-check-push.sh
