@@ -41,6 +41,7 @@ jobs:
           image-ref: 'baseartifacts.azurecr.io/php:8.1-test'
           format: 'table'
           exit-code: '1'
-          #ignore-unfixed: true
+          ignore-unfixed: true
           #vuln-type: 'os,library'
-          severity: 'UNKNOWN,LOW,MEDIUM,HIGH,CRITICAL'
+          #severity: 'UNKNOWN,LOW,MEDIUM,HIGH,CRITICAL'
+          severity: 'HIGH,CRITICAL'
