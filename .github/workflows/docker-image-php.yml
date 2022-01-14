@@ -28,6 +28,7 @@ jobs:
 
   scan-test:
     name: Run Trivy vulnerability scanner
+    runs-on: ubuntu-latest
     steps:
     - uses: aquasecurity/trivy-action@master
       with:
