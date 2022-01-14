@@ -39,9 +39,29 @@ jobs:
         uses: aquasecurity/trivy-action@master
         with:
           image-ref: 'baseartifacts.azurecr.io/php:8.1-test'
-          format: 'table'
+          format: 'table,template'
+          template: '@/contrib/sarif.tpl'
+          output: 'trivy-results.sarif'
           exit-code: '1'
           ignore-unfixed: true
           #vuln-type: 'os,library'
           #severity: 'UNKNOWN,LOW,MEDIUM,HIGH,CRITICAL'
           severity: 'HIGH,CRITICAL'
+
+      #=======================================
+      # Store Security report
+      #=======================================
+      #- name: Tag stable
+      #  uses: actions/null
+
+      #=======================================
+      # Tag image as stable
+      #=======================================
+      #- name: Tag stable
+      #  uses: actions/null
+
+      #=======================================
+      # Generate SBOM
+      #=======================================
+      #- name: Tag stable
+      #  uses: actions/null
