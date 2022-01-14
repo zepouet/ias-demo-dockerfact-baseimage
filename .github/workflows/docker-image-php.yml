@@ -33,7 +33,7 @@ jobs:
           bash .github/workflows/pull-check-push.sh
 
       #=======================================
-      # CHECKOUT
+      # Run Trivy vulnerability scanner
       #=======================================
       - name: Run Trivy vulnerability scanner
         uses: aquasecurity/trivy-action@master
@@ -41,6 +41,6 @@ jobs:
           image-ref: 'baseartifacts.azurecr.io/php:8.1-test'
           format: 'table'
           exit-code: '1'
-          ignore-unfixed: true
-          vuln-type: 'os,library'
+          #ignore-unfixed: true
+          #vuln-type: 'os,library'
           severity: 'UNKNOWN,LOW,MEDIUM,HIGH,CRITICAL'
