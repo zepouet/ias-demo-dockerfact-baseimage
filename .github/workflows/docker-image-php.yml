@@ -50,7 +50,6 @@ jobs:
       #============================================
       - name: Run Trivy vulnerability scanner no severity
         uses: aquasecurity/trivy-action@master
-        needs: pull-for-test
         with:
           image-ref: 'baseartifacts.azurecr.io/php:8.1-test'
           format: 'template'
@@ -125,7 +124,6 @@ jobs:
   deploy-dev:
     runs-on: 'ubuntu-latest'
     environment: 'dev'
-    needs: publish
     steps:
       # Deploy to web app
       - name: 'Login via Azure CLI'
