@@ -24,6 +24,8 @@ jobs:
   pull-for-test:
     name: Release Image
     runs-on: ubuntu-latest
+    output:
+      image-status: ${{ steps.pull-check-push.outputs.image }}
     steps:
       #=======================================
       # CHECKOUT
@@ -47,6 +49,7 @@ jobs:
       #============================================
       # Run Trivy vulnerability scanner no severity
       #============================================
+      - run: echo ${{needs.pull-for-test.outputs.output1}}
       - name: Run Trivy vulnerability scanner no severity
         uses: aquasecurity/trivy-action@master
         if: needs.pull-for-test.steps.pull-check-push.outputs.image == 'updated'
