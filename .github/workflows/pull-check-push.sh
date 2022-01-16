@@ -15,5 +15,4 @@ if [ "$DIGEST1" != "$DIGEST2" ]; then
   echo ::set-output name=key::value
 else
   echo NO UPDATE found for php:8.1
-  exit 1
 fi
