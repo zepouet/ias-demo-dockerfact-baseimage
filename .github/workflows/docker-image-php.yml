@@ -133,4 +133,4 @@ jobs:
         uses: actions/upload-artifact@v2
         with:
           name: published-sbom
-          path: 'sbom.spdx'
+          path: /tmp/sbom-action-**/sbom.spdx
