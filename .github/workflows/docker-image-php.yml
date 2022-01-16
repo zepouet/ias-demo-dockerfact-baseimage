@@ -126,4 +126,5 @@ jobs:
         uses: azure/webapps-deploy@v2
         with:
           app-name: approdev
-          images: baseartifacts.azurecr.io/php:8.1-stable
+          #images: baseartifacts.azurecr.io/php:8.1-stable
+          images: nginx
