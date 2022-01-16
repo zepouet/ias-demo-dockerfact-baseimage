@@ -93,9 +93,8 @@ jobs:
       #=======================================
       # Generate SBOM
       #=======================================
-      #- name: Tag stable
-      #  uses: actions/null
-      - uses: anchore/sbom-action@v0
+      - name: generate SBOM
+        uses: anchore/sbom-action@v0
         with:
           image: baseartifacts.azurecr.io/php:8.1-stable
           artifact-name: sbom.spdx
@@ -108,11 +107,11 @@ jobs:
           path: './app/published-app'
 
   #=====================================================================================================================
-  # PULL, VALIDATE then PUSH the images
+  # DEPLOY INTO DEV AUTOMATICALLY
   #=====================================================================================================================
   deploy-dev:
     runs-on: 'ubuntu-latest'
-    environment: 'dev'
+    #environment: 'dev'
     needs: build-and-publish
     steps:
 
