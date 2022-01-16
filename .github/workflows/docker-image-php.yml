@@ -110,7 +110,7 @@ jobs:
       - run: echo ${{ needs.pull-for-test.outputs.output1 }}
       - name: 'azure registry login'
         uses: azure/docker-login@v1
-        if: needs.pull-for-test.outputs.output1 == 'updated'
+        #if: needs.pull-for-test.outputs.output1 == 'updated'
         with:
           login-server: baseartifacts.azurecr.io
           username: ${{ secrets.ACR_SECRET_ID }}
