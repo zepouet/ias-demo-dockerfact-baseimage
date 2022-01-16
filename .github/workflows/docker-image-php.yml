@@ -59,6 +59,7 @@ jobs:
           ignore-unfixed: true
           vuln-type: 'os,library'
           severity: 'UNKNOWN,LOW,MEDIUM'
+      if: steps.pull-check-push.outputs.key == 'value'
 
       #=======================================
       # Run Trivy vulnerability scanner
