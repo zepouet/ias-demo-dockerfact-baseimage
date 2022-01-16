@@ -107,6 +107,7 @@ jobs:
       #=======================================
       - name: checkout
         uses: actions/checkout@v2
+      - run: echo ${{ needs.pull-for-test.outputs.output1 }}
       - name: 'azure registry login'
         uses: azure/docker-login@v1
         if: needs.pull-for-test.outputs.output1 == 'updated'
