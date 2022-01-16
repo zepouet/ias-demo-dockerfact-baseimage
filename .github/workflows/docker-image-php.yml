@@ -9,14 +9,20 @@ on:
     branches: [ main ]
   pull_request:
     branches: [ main ]
-  #schedule:
-  #  - cron: * * * * *
+  # Run workflow each time code is pushed to your repository and on a schedule.
+  # The scheduled workflow runs every Thursday at 15:45 UTC.
+  schedule:
+    - cron: '45 15 * * 4'
+
+env:
+  DOTNET_VERSION: '3.1.404'
+
 jobs:
 
   #=====================================================================================================================
   # PULL, VALIDATE then PUSH the images
   #=====================================================================================================================
-  Publish:
+  build-and-publish:
     name: Release Image
     runs-on: ubuntu-latest
     steps:
@@ -75,11 +81,41 @@ jobs:
       #=======================================
       # Tag image as stable
       #=======================================
-      #- name: Tag stable
-      #  uses: actions/null
+      - name: tag-as-stable
+        uses: azure/docker-login@v1
+        with:
+          login-server: baseartifacts.azurecr.io
+          username: ${{ secrets.ACR_SECRET_ID }}
+          password: ${{ secrets.ACR_SECRET_PWD }}
+        - run: |
+            bash .github/workflows/tag-as-stable.sh
 
       #=======================================
       # Generate SBOM
       #=======================================
       #- name: Tag stable
       #  uses: actions/null
+      - uses: anchore/sbom-action@v0
+        with:
+          image: baseartifacts.azurecr.io/php:8.1-stable
+          artifact-name: sbom.spdx
+
+      # Publish artifact
+      - name: Publish artifact
+        uses: actions/upload-artifact@v2
+        with:
+          name: published-app
+          path: './app/published-app'
+
+  #=====================================================================================================================
+  # PULL, VALIDATE then PUSH the images
+  #=====================================================================================================================
+  deploy-dev:
+    runs-on: 'ubuntu-latest'
+    environment: 'dev'
+    needs: build-and-publish
+    steps:
+
+      # Download published artifact
+      - name: Download artifact
+        uses: actions/download-artifact@v2
