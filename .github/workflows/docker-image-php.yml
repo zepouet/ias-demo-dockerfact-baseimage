@@ -49,7 +49,7 @@ jobs:
       #============================================
       - name: Run Trivy vulnerability scanner no severity
         uses: aquasecurity/trivy-action@master
-        if: jobs.pull-for-test.steps.pull-check-push.outputs.image == 'updated'
+        if: needs.pull-for-test.steps.pull-check-push.outputs.image == 'updated'
         with:
           image-ref: 'baseartifacts.azurecr.io/php:8.1-test'
           format: 'template'
