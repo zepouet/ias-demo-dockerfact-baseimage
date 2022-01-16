@@ -18,7 +18,6 @@ env:
   DOTNET_VERSION: '3.1.404'
 
 jobs:
-
   #=====================================================================================================================
   # PULL, VALIDATE then PUSH the images
   #=====================================================================================================================
@@ -50,7 +49,7 @@ jobs:
       #============================================
       - name: Run Trivy vulnerability scanner no severity
         uses: aquasecurity/trivy-action@master
-        if: steps.pull-check-push.outputs.image == 'updated'
+        if: jobs.pull-for-test.steps.pull-check-push.outputs.image == 'updated'
         with:
           image-ref: 'baseartifacts.azurecr.io/php:8.1-test'
           format: 'template'
