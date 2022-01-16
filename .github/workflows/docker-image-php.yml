@@ -69,7 +69,7 @@ jobs:
       #=======================================
       - name: Run Trivy vulnerability scanner
         uses: aquasecurity/trivy-action@master
-        if: steps.pull-check-push.outputs.image == 'updated'
+        if: needs.pull-for-test.outputs.output1 == 'updated'
         with:
           image-ref: 'baseartifacts.azurecr.io/php:8.1-test'
           format: 'template'
@@ -84,7 +84,7 @@ jobs:
       # Store Security report
       #=======================================
       - name: Upload Trivy scan results to GitHub Security tab
-        if: steps.pull-check-push.outputs.image == 'updated'
+        if: needs.pull-for-test.outputs.output1 == 'updated'
         uses: github/codeql-action/upload-sarif@v1
         with:
           sarif_file: 'trivy-results.sarif'
@@ -101,7 +101,7 @@ jobs:
         uses: actions/checkout@v2
       - name: pull-check-push
         uses: azure/docker-login@v1
-        if: steps.pull-check-push.outputs.image == 'updated'
+        if: needs.pull-for-test.outputs.output1 == 'updated'
         with:
           login-server: baseartifacts.azurecr.io
           username: ${{ secrets.ACR_SECRET_ID }}
@@ -114,14 +114,14 @@ jobs:
       #=======================================
       - name: 'Generate SBOM'
         uses: anchore/sbom-action@v0
-        if: steps.pull-check-push.outputs.image == 'updated'
+        if: needs.pull-for-test.outputs.output1 == 'updated'
         with:
           image: baseartifacts.azurecr.io/php:8.1-stable
           artifact-name: sbom.spdx
 
       # Publish artifact
       - name: 'Publish artifact'
-        if: steps.pull-check-push.outputs.image == 'updated'
+        if: needs.pull-for-test.outputs.output1 == 'updated'
         uses: actions/upload-artifact@v2
         with:
           name: published-sbom
