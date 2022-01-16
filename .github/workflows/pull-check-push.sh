@@ -12,6 +12,8 @@ if [ "$DIGEST1" != "$DIGEST2" ]; then
   docker tag php:8.1 baseartifacts.azurecr.io/php:8.1-test
   docker push baseartifacts.azurecr.io/php:8.1-test
   echo PUSHED for test
+  exit 0
 else
   echo NO UPDATE found for php:8.1
+  exit 1
 fi
