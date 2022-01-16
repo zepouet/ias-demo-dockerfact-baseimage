@@ -106,8 +106,8 @@ jobs:
       - name: Publish artifact
         uses: actions/upload-artifact@v2
         with:
-          name: published-app
-          path: './app/published-app'
+          name: published-sbom
+          path: 'sbom.spdx'
 
   #=====================================================================================================================
   # DEPLOY INTO DEV AUTOMATICALLY
