@@ -97,6 +97,14 @@ jobs:
         with:
           sarif_file: 'trivy-results.sarif'
 
+      # Publish artifact
+      - name: 'Publish artifact'
+        if: needs.pull-for-test.outputs.output1 == 'updated'
+        uses: actions/upload-artifact@v2
+        with:
+          name: published-sbom
+          path: /tmp/**/trivy-results*.sarif
+
   publish:
     name: 'Publish as stable'
     runs-on: ubuntu-latest
@@ -110,7 +118,7 @@ jobs:
       - run: echo ${{ needs.pull-for-test.outputs.output1 }}
       - name: 'azure registry login'
         uses: azure/docker-login@v1
-        #if: needs.pull-for-test.outputs.output1 == 'updated'
+        if: needs.pull-for-test.outputs.output1 == 'updated'
         with:
           login-server: baseartifacts.azurecr.io
           username: ${{ secrets.ACR_SECRET_ID }}
@@ -123,14 +131,14 @@ jobs:
       #=======================================
       - name: 'Generate SBOM'
         uses: anchore/sbom-action@v0
-        #if: needs.pull-for-test.outputs.output1 == 'updated'
+        if: needs.pull-for-test.outputs.output1 == 'updated'
         with:
           image: baseartifacts.azurecr.io/php:8.1-stable
           artifact-name: sbom.spdx
 
       # Publish artifact
       - name: 'Publish artifact'
-        #if: needs.pull-for-test.outputs.output1 == 'updated'
+        if: needs.pull-for-test.outputs.output1 == 'updated'
         uses: actions/upload-artifact@v2
         with:
           name: published-sbom
