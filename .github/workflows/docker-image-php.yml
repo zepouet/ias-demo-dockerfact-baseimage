@@ -96,14 +96,14 @@ jobs:
       #=======================================
       # Generate SBOM
       #=======================================
-      - name: generate SBOM
+      - name: 'Generate SBOM'
         uses: anchore/sbom-action@v0
         with:
           image: baseartifacts.azurecr.io/php:8.1-stable
           artifact-name: sbom.spdx
 
       # Publish artifact
-      - name: Publish artifact
+      - name: 'Publish artifact'
         uses: actions/upload-artifact@v2
         with:
           name: published-sbom
@@ -114,10 +114,16 @@ jobs:
   #=====================================================================================================================
   deploy-dev:
     runs-on: 'ubuntu-latest'
-    #environment: 'dev'
+    environment: 'dev'
     needs: build-and-publish
     steps:
-
-      # Download published artifact
-      - name: Download artifact
-        uses: actions/download-artifact@v2
+      # Deploy to web app
+      - name: 'Login via Azure CLI'
+        uses: azure/login@v1
+        with:
+          creds: ${{ secrets.AZURE_CREDENTIALS }}
+      - name: 'Deploy to Azure WebApp'
+        uses: azure/webapps-deploy@v2
+        with:
+          app-name: approdev
+          images: baseartifacts.azurecr.io/php:8.1-stable
