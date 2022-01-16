@@ -99,6 +99,7 @@ jobs:
         uses: actions/checkout@v2
       - name: pull-check-push
         uses: azure/docker-login@v1
+        if: steps.pull-check-push.outputs.image == 'updated'
         with:
           login-server: baseartifacts.azurecr.io
           username: ${{ secrets.ACR_SECRET_ID }}
@@ -111,12 +112,14 @@ jobs:
       #=======================================
       - name: 'Generate SBOM'
         uses: anchore/sbom-action@v0
+        if: steps.pull-check-push.outputs.image == 'updated'
         with:
           image: baseartifacts.azurecr.io/php:8.1-stable
           artifact-name: sbom.spdx
 
       # Publish artifact
       - name: 'Publish artifact'
+        if: steps.pull-check-push.outputs.image == 'updated'
         uses: actions/upload-artifact@v2
         with:
           name: published-sbom
