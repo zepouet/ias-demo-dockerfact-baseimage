@@ -25,7 +25,7 @@ jobs:
     name: Release Image
     runs-on: ubuntu-latest
     outputs:
-      image-status: ${{ steps.pull-check-push.outputs.image }}
+      image-status: ${{ steps.pull-check-push.outputs.name }}
       nicolas: 'muller'
     steps:
       #=======================================
