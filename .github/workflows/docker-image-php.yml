@@ -49,7 +49,7 @@ jobs:
     needs: pull-for-test
     steps:
       - run: echo ${{ needs.pull-for-test.outputs.output1 }}
-      - name: pull-check-push
+      - name: 'azure registry login'
         uses: azure/docker-login@v1
         with:
           login-server: baseartifacts.azurecr.io
@@ -58,7 +58,6 @@ jobs:
       #============================================
       # Run Trivy vulnerability scanner no severity
       #============================================
-
       - name: Run Trivy vulnerability scanner no severity
         uses: aquasecurity/trivy-action@master
         if: needs.pull-for-test.outputs.output1 == 'updated'
