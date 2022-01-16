@@ -24,7 +24,7 @@ jobs:
   pull-for-test:
     name: Release Image
     runs-on: ubuntu-latest
-    output:
+    outputs:
       image-status: ${{ steps.pull-check-push.outputs.image }}
     steps:
       #=======================================
