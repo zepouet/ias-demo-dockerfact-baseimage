@@ -95,6 +95,8 @@ jobs:
       #=======================================
       # Tag image as stable
       #=======================================
+      - name: checkout
+        uses: actions/checkout@v2
       - name: pull-check-push
         uses: azure/docker-login@v1
         if: steps.pull-check-push.outputs.image == 'updated'
