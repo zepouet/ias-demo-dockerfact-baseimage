@@ -48,9 +48,6 @@ jobs:
     runs-on: ubuntu-latest
     needs: pull-for-test
     steps:
-      #============================================
-      # Run Trivy vulnerability scanner no severity
-      #============================================
       - run: echo ${{ needs.pull-for-test.outputs.output1 }}
       - name: pull-check-push
         uses: azure/docker-login@v1
@@ -58,6 +55,10 @@ jobs:
           login-server: baseartifacts.azurecr.io
           username: ${{ secrets.ACR_SECRET_ID }}
           password: ${{ secrets.ACR_SECRET_PWD }}
+      #============================================
+      # Run Trivy vulnerability scanner no severity
+      #============================================
+
       - name: Run Trivy vulnerability scanner no severity
         uses: aquasecurity/trivy-action@master
         if: needs.pull-for-test.outputs.output1 == 'updated'
