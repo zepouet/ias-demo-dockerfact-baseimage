@@ -103,8 +103,8 @@ jobs:
         if: needs.pull-for-test.outputs.output1 == 'updated'
         uses: actions/upload-artifact@v2
         with:
-          name: published-sbom
-          path: /tmp/**/trivy-results*.sarif
+          name: published-trivy-scan
+          path: trivy-results*.sarif
 
   publish:
     name: 'Publish as stable'
