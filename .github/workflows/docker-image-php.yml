@@ -25,7 +25,7 @@ jobs:
     name: Release Image
     runs-on: ubuntu-latest
     outputs:
-      output1: ${{ steps.pull-check-push.outputs.image }}
+      output1: ${{ steps.exec.outputs.image }}
       output2: 'muller'
     steps:
       #=======================================
@@ -39,7 +39,9 @@ jobs:
           login-server: baseartifacts.azurecr.io
           username: ${{ secrets.ACR_SECRET_ID }}
           password: ${{ secrets.ACR_SECRET_PWD }}
-      - run: echo ::set-output name=image::updated
+      - name: 'execution'
+        id: exec
+        run: echo ::set-output name=image::updated
 
   security-scan:
     name: 'Security scanning'
