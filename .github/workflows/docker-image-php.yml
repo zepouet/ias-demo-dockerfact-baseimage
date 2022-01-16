@@ -50,7 +50,7 @@ jobs:
       #============================================
       - name: Run Trivy vulnerability scanner no severity
         uses: aquasecurity/trivy-action@master
-        if: steps.pull-check-push.outputs.key == 'value'
+        if: steps.pull-check-push.outputs.image == 'updated'
         with:
           image-ref: 'baseartifacts.azurecr.io/php:8.1-test'
           format: 'template'
@@ -67,6 +67,7 @@ jobs:
       #=======================================
       - name: Run Trivy vulnerability scanner
         uses: aquasecurity/trivy-action@master
+        if: steps.pull-check-push.outputs.image == 'updated'
         with:
           image-ref: 'baseartifacts.azurecr.io/php:8.1-test'
           format: 'template'
@@ -81,6 +82,7 @@ jobs:
       # Store Security report
       #=======================================
       - name: Upload Trivy scan results to GitHub Security tab
+        if: steps.pull-check-push.outputs.image == 'updated'
         uses: github/codeql-action/upload-sarif@v1
         with:
           sarif_file: 'trivy-results.sarif'
@@ -119,22 +121,3 @@ jobs:
         with:
           name: published-sbom
           path: 'sbom.spdx'
-
-  #=====================================================================================================================
-  # DEPLOY INTO DEV AUTOMATICALLY
-  #=====================================================================================================================
-  deploy-dev:
-    runs-on: 'ubuntu-latest'
-    environment: 'dev'
-    steps:
-      # Deploy to web app
-      - name: 'Login via Azure CLI'
-        uses: azure/login@v1
-        with:
-          creds: ${{ secrets.AZURE_CREDENTIALS }}
-      - name: 'Deploy to Azure WebApp'
-        uses: azure/webapps-deploy@v2
-        with:
-          app-name: approdev
-          #images: baseartifacts.azurecr.io/php:8.1-stable
-          images: nginx

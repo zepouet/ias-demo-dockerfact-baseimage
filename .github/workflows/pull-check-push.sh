@@ -12,7 +12,7 @@ if [ "$DIGEST1" != "$DIGEST2" ]; then
   docker tag php:8.1 baseartifacts.azurecr.io/php:8.1-test
   docker push baseartifacts.azurecr.io/php:8.1-test
   echo PUSHED for test
-  echo ::set-output name=key::value
+  echo ::set-output name=image::updated
 else
   echo NO UPDATE found for php:8.1
 fi
