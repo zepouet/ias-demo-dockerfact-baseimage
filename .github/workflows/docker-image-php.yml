@@ -125,7 +125,7 @@ jobs:
         if: needs.pull-for-test.outputs.output1 == 'updated'
         with:
           image: baseartifacts.azurecr.io/php:8.1-stable
-          artifact-name: sbom.spdx
+          artifact-name: /tmp/sbom.spdx
 
       # Publish artifact
       - name: 'Publish artifact'
@@ -133,4 +133,4 @@ jobs:
         uses: actions/upload-artifact@v2
         with:
           name: published-sbom
-          path: 'sbom.spdx'
+          path: '/tmp/sbom.spdx'
