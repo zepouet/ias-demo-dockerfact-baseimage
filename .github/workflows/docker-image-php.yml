@@ -50,6 +50,7 @@ jobs:
       #============================================
       - name: Run Trivy vulnerability scanner no severity
         uses: aquasecurity/trivy-action@master
+        if: steps.pull-check-push.outputs.key == 'value'
         with:
           image-ref: 'baseartifacts.azurecr.io/php:8.1-test'
           format: 'template'
@@ -59,7 +60,7 @@ jobs:
           ignore-unfixed: true
           vuln-type: 'os,library'
           severity: 'UNKNOWN,LOW,MEDIUM'
-      if: steps.pull-check-push.outputs.key == 'value'
+
 
       #=======================================
       # Run Trivy vulnerability scanner
