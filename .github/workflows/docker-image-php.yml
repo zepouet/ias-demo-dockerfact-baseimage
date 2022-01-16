@@ -41,7 +41,8 @@ jobs:
           password: ${{ secrets.ACR_SECRET_PWD }}
       - name: 'execution'
         id: exec
-        run: echo ::set-output name=image::updated
+        run: |
+          bash .github/workflows/pull-check-push.sh
 
   security-scan:
     name: 'Security scanning'
