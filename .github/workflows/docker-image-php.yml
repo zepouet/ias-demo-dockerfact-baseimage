@@ -25,8 +25,8 @@ jobs:
     name: Release Image
     runs-on: ubuntu-latest
     outputs:
-      image-status: ${{ steps.pull-check-push.outputs.image }}
-      nicolas: 'muller'
+      output1: ${{ steps.pull-check-push.outputs.image }}
+      output2: 'muller'
     steps:
       #=======================================
       # CHECKOUT
@@ -51,8 +51,8 @@ jobs:
       #============================================
       # Run Trivy vulnerability scanner no severity
       #============================================
-      - run: echo ${{ needs.pull-for-test.outputs.image-status }}
-      - run: echo ${{ needs.pull-for-test.outputs.nicolas }}
+      - run: echo ${{ needs.pull-for-test.outputs.output1 }}
+      - run: echo ${{ needs.pull-for-test.outputs.output2 }}
       - name: Run Trivy vulnerability scanner no severity
         uses: aquasecurity/trivy-action@master
         if: needs.pull-for-test.steps.pull-check-push.outputs.image == 'updated'
