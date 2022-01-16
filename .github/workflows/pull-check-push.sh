@@ -16,5 +16,4 @@ if [ "$DIGEST1" != "$DIGEST2" ]; then
 else
   echo SKIPPED found for php:8.1
   echo ::set-output name=image::skipped
-  #echo ::set-output name=image::updated
 fi
