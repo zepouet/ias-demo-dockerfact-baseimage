@@ -78,6 +78,7 @@ jobs:
       - name: Run Trivy vulnerability scanner
         uses: aquasecurity/trivy-action@master
         if: needs.pull-for-test.outputs.output1 == 'updated'
+        continue-on-error: true
         with:
           image-ref: 'baseartifacts.azurecr.io/php:8.1-test'
           format: 'template'
@@ -94,6 +95,7 @@ jobs:
       - name: Upload Trivy scan results to GitHub Security tab
         if: needs.pull-for-test.outputs.output1 == 'updated'
         uses: github/codeql-action/upload-sarif@v1
+        continue-on-error: true
         with:
           sarif_file: 'trivy-results.sarif'
 
