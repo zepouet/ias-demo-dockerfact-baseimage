@@ -87,7 +87,8 @@ jobs:
           ignore-unfixed: true
           vuln-type: 'os,library'
           severity: 'HIGH,CRITICAL'
-
+      - run: pwd
+      - run: ls -la trivy-results.sarif
       #=======================================
       # Store Security report
       #=======================================
