@@ -14,6 +14,6 @@ if [ "$DIGEST1" != "$DIGEST2" ]; then
   echo PUSHED for test
   echo ::set-output name=image::updated
 else
-  echo NO UPDATE found for php:8.1
+  echo SKIPPED found for php:8.1
   echo ::set-output name=image::skipped
 fi

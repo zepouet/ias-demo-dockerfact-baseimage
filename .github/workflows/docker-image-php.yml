@@ -52,11 +52,9 @@ jobs:
       #============================================
       # Run Trivy vulnerability scanner no severity
       #============================================
-      - run: echo ${{ needs.pull-for-test.outputs.output1 }}
-      - run: echo ${{ needs.pull-for-test.outputs.output2 }}
       - name: Run Trivy vulnerability scanner no severity
         uses: aquasecurity/trivy-action@master
-        if: needs.pull-for-test.steps.pull-check-push.outputs.image == 'updated'
+        if: needs.pull-for-test.outputs.output1 == 'updated'
         with:
           image-ref: 'baseartifacts.azurecr.io/php:8.1-test'
           format: 'template'
