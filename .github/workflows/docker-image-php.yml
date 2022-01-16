@@ -87,7 +87,7 @@ jobs:
           login-server: baseartifacts.azurecr.io
           username: ${{ secrets.ACR_SECRET_ID }}
           password: ${{ secrets.ACR_SECRET_PWD }}
-          - run: |
+        - run: |
               bash .github/workflows/tag-as-stable.sh
 
       #=======================================
