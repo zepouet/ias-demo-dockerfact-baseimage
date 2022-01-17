@@ -8,6 +8,7 @@ pwd
 ls -la .
 
 docker pull ${REGISTRY}/${IMAGE}-test || true
+echo docker build -t ${IMAGE} -f Dockerfile ${DOCKERFILE_LOCATION}
 docker build -t ${IMAGE} -f Dockerfile ${DOCKERFILE_LOCATION}
 
 DIGEST1=$(docker images --no-trunc --quiet ${REGISTRY}/${IMAGE}-test)
