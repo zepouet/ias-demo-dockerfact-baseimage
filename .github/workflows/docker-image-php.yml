@@ -15,7 +15,8 @@ on:
     - cron: '45 15 * * 4'
 
 env:
-  DOTNET_VERSION: '3.1.404'
+  IMAGE: php:8.1
+  REGISTRY: baseartifacts.azurecr.io
 
 jobs:
   #=====================================================================================================================
@@ -35,7 +36,7 @@ jobs:
       - name: 'azure registry login'
         uses: azure/docker-login@v1
         with:
-          login-server: baseartifacts.azurecr.io
+          login-server: ${REGISTRY}
           username: ${{ secrets.ACR_SECRET_ID }}
           password: ${{ secrets.ACR_SECRET_PWD }}
       - name: 'Pull then check'
@@ -52,18 +53,18 @@ jobs:
       - name: 'azure registry login'
         uses: azure/docker-login@v1
         with:
-          login-server: baseartifacts.azurecr.io
+          login-server: ${REGISTRY}
           username: ${{ secrets.ACR_SECRET_ID }}
           password: ${{ secrets.ACR_SECRET_PWD }}
       #============================================
       # Run Trivy vulnerability scanner no severity
       #============================================
-      - run: docker pull baseartifacts.azurecr.io/php:8.1-test
+      - run: docker pull baseartifacts.azurecr.io/${IMAGE}-test
       - name: Run Trivy vulnerability scanner no severity
         uses: aquasecurity/trivy-action@master
         if: needs.pull-for-test.outputs.output1 == 'updated'
         with:
-          image-ref: 'baseartifacts.azurecr.io/php:8.1-test'
+          image-ref: '${REGISTRY}/${IMAGE}-test'
           format: 'template'
           template: '@/contrib/sarif.tpl'
           output: 'trivy-results-nofail.sarif'
@@ -79,7 +80,7 @@ jobs:
         uses: aquasecurity/trivy-action@master
         if: needs.pull-for-test.outputs.output1 == 'updated'
         with:
-          image-ref: 'baseartifacts.azurecr.io/php:8.1-test'
+          image-ref: '${REGISTRY}/${IMAGE}-test'
           format: 'template'
           template: '@/contrib/sarif.tpl'
           output: 'trivy-results.sarif'
@@ -134,7 +135,7 @@ jobs:
         uses: anchore/sbom-action@v0
         if: needs.pull-for-test.outputs.output1 == 'updated'
         with:
-          image: baseartifacts.azurecr.io/php:8.1-stable
+          image: ${REGISTRY}/${IMAGE}-stable
           artifact-name: sbom.spdx
 
       # Publish artifact

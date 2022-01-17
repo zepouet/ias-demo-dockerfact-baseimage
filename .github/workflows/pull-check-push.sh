@@ -1,5 +1,8 @@
 #!/usr/bin/env bash
 
+REGISTRY=$1
+IMAGE=$2
+
 docker pull baseartifacts.azurecr.io/php:8.1-test || true
 docker pull php:8.1
 DIGEST1=$(docker images --no-trunc --quiet baseartifacts.azurecr.io/php:8.1-test)
