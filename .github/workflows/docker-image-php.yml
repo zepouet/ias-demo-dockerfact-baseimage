@@ -59,7 +59,7 @@ jobs:
       #============================================
       # Run Trivy vulnerability scanner no severity
       #============================================
-      - run: echo ${REGISTRY}/${IMAGE}-test
+      - run: echo ${{REGISTRY{}/${{IMAGE}}-test
       - run: docker pull ${REGISTRY}/${IMAGE}-test
       - name: Run Trivy vulnerability scanner no severity
         uses: aquasecurity/trivy-action@master
