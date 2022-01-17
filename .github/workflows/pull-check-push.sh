@@ -3,21 +3,21 @@
 REGISTRY=$1
 IMAGE=$2
 
-#docker pull ${REGISTRY}/${IMAGE}-test || true
-docker build -t ${REGISTRY}/${IMAGE}-test php/8.1/debian
+docker pull ${REGISTRY}/${IMAGE}-test || true
+docker build -t ${IMAGE} php/8.1/debian
 
-docker pull ${IMAGE}
 DIGEST1=$(docker images --no-trunc --quiet ${REGISTRY}/${IMAGE}-test)
 DIGEST2=$(docker images --no-trunc --quiet ${IMAGE})
+
 echo "DIGEST1(${REGISTRY}/${IMAGE}-test)="$DIGEST1
 echo "DIGEST2(${IMAGE})="$DIGEST2
+
 if [ "$DIGEST1" != "$DIGEST2" ]; then
   echo DIFF DETECTED. SHOW MUST GO ON
   docker rmi ${REGISTRY}/${IMAGE}-test || true
   docker tag ${IMAGE} ${REGISTRY}/${IMAGE}-test
   docker push ${REGISTRY}/${IMAGE}-test
   echo PUSHED for test for ${IMAGE}
-
   echo ::set-output name=image::updated
 else
   echo SKIPPED found for ${IMAGE}
