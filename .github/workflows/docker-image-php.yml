@@ -10,8 +10,6 @@ on:
     paths:
       - 'php/8.1/**'
       - '.github/**'
-  # Run workflow each time code is pushed to your repository and on a schedule.
-  # The scheduled workflow runs every Thursday at 15:45 UTC.
   schedule:
     - cron: '45 15 * * 4'
 
