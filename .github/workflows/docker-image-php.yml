@@ -121,10 +121,12 @@ jobs:
         uses: azure/docker-login@v1
         if: needs.pull-for-test.outputs.output1 == 'updated'
         with:
-          login-server: baseartifacts.azurecr.io
+          login-server: ${{ env.REGISTRY }}
           username: ${{ secrets.ACR_SECRET_ID }}
           password: ${{ secrets.ACR_SECRET_PWD }}
-      - run: |
+      - name: 'Tag as stable'
+        if: needs.pull-for-test.outputs.output1 == 'updated'
+        run: |
           bash .github/workflows/tag-as-stable.sh
 
       #=======================================
