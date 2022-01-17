@@ -25,8 +25,6 @@ jobs:
   pull-for-test:
     name: Release Image
     runs-on: ubuntu-latest
-    outputs:
-      output1: ${{ steps.exec.outputs.image }}
     steps:
       #=======================================
       # CHECKOUT
@@ -39,10 +37,11 @@ jobs:
           login-server: ${{ env.REGISTRY }}
           username: ${{ secrets.ACR_SECRET_ID }}
           password: ${{ secrets.ACR_SECRET_PWD }}
-      - name: 'Pull then check'
-        id: exec
+      - name: 'Build the image'
+        id: build
         run: |
-          bash .github/workflows/pull-check-push.sh ${{ env.REGISTRY }} ${{ env.IMAGE }} ${{ env.DOCKLERFILE_PATH }}
+          docker build -t ${{ env.REGISTRY }}/${{ env.IMAGE }}-test -f ${{ env.DOCKLERFILE_PATH }}/Dockerfile ${{ env.DOCKLERFILE_PATH }}
+          docker push ${{ env.REGISTRY }}/${{ env.IMAGE }}-test
 
   security-scan:
     name: 'Security scanning'
@@ -62,7 +61,6 @@ jobs:
       - run: docker pull ${{ env.REGISTRY }}/${{ env.IMAGE }}-test
       - name: Run Trivy vulnerability scanner no severity
         uses: aquasecurity/trivy-action@master
-        if: needs.pull-for-test.outputs.output1 == 'updated'
         with:
           image-ref: '${{ env.REGISTRY }}/${{ env.IMAGE }}-test'
           format: 'template'
@@ -78,7 +76,6 @@ jobs:
       #=======================================
       - name: Run Trivy vulnerability scanner
         uses: aquasecurity/trivy-action@master
-        if: needs.pull-for-test.outputs.output1 == 'updated'
         with:
           image-ref: '${{ env.REGISTRY }}/${{ env.IMAGE }}-test'
           format: 'template'
@@ -93,14 +90,12 @@ jobs:
       # Store Security report
       #=======================================
       - name: Upload Trivy scan results to GitHub Security tab
-        if: needs.pull-for-test.outputs.output1 == 'updated'
         uses: github/codeql-action/upload-sarif@v1
         with:
           sarif_file: 'trivy-results.sarif'
 
       # Publish artifact
       - name: 'Publish artifact'
-        if: needs.pull-for-test.outputs.output1 == 'updated'
         uses: actions/upload-artifact@v2
         with:
           name: published-trivy-scan
@@ -119,13 +114,11 @@ jobs:
       - run: echo ${{ needs.pull-for-test.outputs.output1 }}
       - name: 'azure registry login'
         uses: azure/docker-login@v1
-        if: needs.pull-for-test.outputs.output1 == 'updated'
         with:
           login-server: ${{ env.REGISTRY }}
           username: ${{ secrets.ACR_SECRET_ID }}
           password: ${{ secrets.ACR_SECRET_PWD }}
       - name: 'Tag as stable'
-        if: needs.pull-for-test.outputs.output1 == 'updated'
         run: |
           bash .github/workflows/tag-as-stable.sh ${{ env.REGISTRY }} ${{ env.IMAGE }}
 
@@ -134,14 +127,12 @@ jobs:
       #=======================================
       - name: 'Generate SBOM'
         uses: anchore/sbom-action@v0
-        if: needs.pull-for-test.outputs.output1 == 'updated'
         with:
           image: ${{ env.REGISTRY }}/${{ env.IMAGE }}-stable
           artifact-name: sbom.spdx
 
       # Publish artifact
       - name: 'Publish artifact SBOM'
-        if: needs.pull-for-test.outputs.output1 == 'updated'
         uses: actions/upload-artifact@v2
         with:
           name: published-sbom
