@@ -36,7 +36,7 @@ jobs:
       - name: 'azure registry login'
         uses: azure/docker-login@v1
         with:
-          login-server: ${{env.REGISTRY}}
+          login-server: ${{ env.REGISTRY }}
           username: ${{ secrets.ACR_SECRET_ID }}
           password: ${{ secrets.ACR_SECRET_PWD }}
       - name: 'Pull then check'
@@ -59,13 +59,12 @@ jobs:
       #============================================
       # Run Trivy vulnerability scanner no severity
       #============================================
-      - run: echo ${REGISTRY}/${IMAGE}-test
-      - run: docker pull ${{REGISTRY}}/${{IMAGE}}-test
+      - run: docker pull ${{ env.REGISTRY }}/${{ env.IMAGE }}-test
       - name: Run Trivy vulnerability scanner no severity
         uses: aquasecurity/trivy-action@master
         if: needs.pull-for-test.outputs.output1 == 'updated'
         with:
-          image-ref: '${REGISTRY}/${IMAGE}-test'
+          image-ref: '${{ env.REGISTRY }}/${{ env.IMAGE }}-test-test'
           format: 'template'
           template: '@/contrib/sarif.tpl'
           output: 'trivy-results-nofail.sarif'
@@ -81,7 +80,7 @@ jobs:
         uses: aquasecurity/trivy-action@master
         if: needs.pull-for-test.outputs.output1 == 'updated'
         with:
-          image-ref: '${REGISTRY}/${IMAGE}-test'
+          image-ref: '${{ env.REGISTRY }}/${{ env.IMAGE }}-test-test'
           format: 'template'
           template: '@/contrib/sarif.tpl'
           output: 'trivy-results.sarif'
@@ -136,7 +135,7 @@ jobs:
         uses: anchore/sbom-action@v0
         if: needs.pull-for-test.outputs.output1 == 'updated'
         with:
-          image: ${REGISTRY}/${IMAGE}-stable
+          image: ${{ env.REGISTRY }}/${{ env.IMAGE }}-test-stable
           artifact-name: sbom.spdx
 
       # Publish artifact
