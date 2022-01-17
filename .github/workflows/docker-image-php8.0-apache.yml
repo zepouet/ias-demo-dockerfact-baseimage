@@ -42,7 +42,7 @@ jobs:
       - name: 'Pull then check'
         id: exec
         run: |
-          bash .github/workflows/pull-check-push.sh ${{ env.REGISTRY }} ${{ env.IMAGE }} ${{ env.DOCKERFILE_LOCATION }}
+          bash .github/workflows/pull-check-push.sh ${{ env.REGISTRY }} ${{ env.IMAGE }} ${{ env.DOCKLERFILE_PATH }}
 
   security-scan:
     name: 'Security scanning'

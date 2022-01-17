@@ -2,14 +2,14 @@
 
 REGISTRY=$1
 IMAGE=$2
-DOCKERFILE_LOCATION=$3
+DOCKLERFILE_PATH=$3
 
 pwd
 ls -la .
 
 docker pull ${REGISTRY}/${IMAGE}-test || true
-echo docker build -t ${IMAGE} -f Dockerfile ${DOCKERFILE_LOCATION}
-docker build -t ${IMAGE} -f Dockerfile ${DOCKERFILE_LOCATION}
+echo docker build -t ${IMAGE} -f Dockerfile ${DOCKLERFILE_PATH}
+docker build -t ${IMAGE} -f Dockerfile ${DOCKLERFILE_PATH}
 
 DIGEST1=$(docker images --no-trunc --quiet ${REGISTRY}/${IMAGE}-test)
 DIGEST2=$(docker images --no-trunc --quiet ${IMAGE})
