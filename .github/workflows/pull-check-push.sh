@@ -4,6 +4,9 @@ REGISTRY=$1
 IMAGE=$2
 DOCKERFILE_LOCATION=$3
 
+pwd
+ls -la .
+
 docker pull ${REGISTRY}/${IMAGE}-test || true
 docker build -t ${IMAGE} ${DOCKERFILE_LOCATION}
 
