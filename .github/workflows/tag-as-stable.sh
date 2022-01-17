@@ -1,5 +1,8 @@
 #!/usr/bin/env bash
 
-docker pull baseartifacts.azurecr.io/php:8.1-test
-docker tag baseartifacts.azurecr.io/php:8.1-test baseartifacts.azurecr.io/php:8.1-stable
-docker push baseartifacts.azurecr.io/php:8.1-stable
+REGISTRY=$1
+IMAGE=$2
+
+docker pull ${REGISTRY}/${IMAGE}-test
+docker tag ${REGISTRY}/${IMAGE}-test ${REGISTRY}/${IMAGE}-stable
+docker push ${REGISTRY}/${IMAGE}-stable
