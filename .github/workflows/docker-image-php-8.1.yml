@@ -120,7 +120,7 @@ jobs:
           password: ${{ secrets.ACR_SECRET_PWD }}
       - name: 'Tag as stable'
         run: |
-          docker docker pull ${{ env.REGISTRY }}/${{ env.IMAGE }}-test
+          docker pull ${{ env.REGISTRY }}/${{ env.IMAGE }}-test
           docker tag ${{ env.REGISTRY }}/${{ env.IMAGE }}-test ${{ env.REGISTRY }}/${{ env.IMAGE }}-stable
           docker push ${{ env.REGISTRY }}/${{ env.IMAGE }}-stable
 
