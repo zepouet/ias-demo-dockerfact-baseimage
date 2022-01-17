@@ -2,9 +2,10 @@
 
 REGISTRY=$1
 IMAGE=$2
+DOCKERFILE_LOCATION=$3
 
 docker pull ${REGISTRY}/${IMAGE}-test || true
-docker build -t ${IMAGE} php/8.1/debian
+docker build -t ${IMAGE} ${DOCKERFILE_LOCATION}
 
 DIGEST1=$(docker images --no-trunc --quiet ${REGISTRY}/${IMAGE}-test)
 DIGEST2=$(docker images --no-trunc --quiet ${IMAGE})
