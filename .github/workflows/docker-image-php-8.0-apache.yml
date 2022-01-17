@@ -1,0 +1,142 @@
+name: Docker PHP 8.0 APACHE
+
+on:
+  push:
+    branches: [ main ]
+    paths:
+      - 'php/8.0-apache/**'
+      - '.github/**'
+  schedule:
+    - cron: '45 15 * * 4'
+
+env:
+  DOCKLERFILE_PATH: php/8.0-apache
+  IMAGE: php:8.0-apache-buster
+  REGISTRY: baseartifacts.azurecr.io
+
+jobs:
+  #=====================================================================================================================
+  # PULL, VALIDATE then PUSH the images
+  #=====================================================================================================================
+  pull-for-test:
+    name: Release Image
+    runs-on: ubuntu-latest
+    steps:
+      #=======================================
+      # CHECKOUT
+      #=======================================
+      - name: checkout
+        uses: actions/checkout@v2
+      - name: 'azure registry login'
+        uses: azure/docker-login@v1
+        with:
+          login-server: ${{ env.REGISTRY }}
+          username: ${{ secrets.ACR_SECRET_ID }}
+          password: ${{ secrets.ACR_SECRET_PWD }}
+      - name: 'Build the image'
+        id: build
+        run: |
+          docker build -t ${{ env.REGISTRY }}/${{ env.IMAGE }}-test -f ${{ env.DOCKLERFILE_PATH }}/Dockerfile ${{ env.DOCKLERFILE_PATH }}
+          docker push ${{ env.REGISTRY }}/${{ env.IMAGE }}-test
+      - name: run structure tests
+        uses: brpaz/structure-tests-action@v1.1.2
+        with:
+          image: ${{ env.REGISTRY }}/${{ env.IMAGE }}-test
+          configFile: php/8.1/debian/structure-tests.yaml
+
+  security-scan:
+    name: 'Security scanning'
+    runs-on: ubuntu-latest
+    needs: pull-for-test
+    steps:
+      - run: echo ${{ needs.pull-for-test.outputs.output1 }}
+      - name: 'azure registry login'
+        uses: azure/docker-login@v1
+        with:
+          login-server: baseartifacts.azurecr.io
+          username: ${{ secrets.ACR_SECRET_ID }}
+          password: ${{ secrets.ACR_SECRET_PWD }}
+      #============================================
+      # Run Trivy vulnerability scanner no severity
+      #============================================
+      - run: docker pull ${{ env.REGISTRY }}/${{ env.IMAGE }}-test
+      - name: Run Trivy vulnerability scanner no severity
+        uses: aquasecurity/trivy-action@master
+        with:
+          image-ref: '${{ env.REGISTRY }}/${{ env.IMAGE }}-test'
+          format: 'template'
+          template: '@/contrib/sarif.tpl'
+          output: 'trivy-results-nofail.sarif'
+          exit-code: '0'
+          ignore-unfixed: true
+          vuln-type: 'os,library'
+          severity: 'UNKNOWN,LOW,MEDIUM'
+
+      #=======================================
+      # Run Trivy vulnerability scanner
+      #=======================================
+      - name: Run Trivy vulnerability scanner
+        uses: aquasecurity/trivy-action@master
+        with:
+          image-ref: '${{ env.REGISTRY }}/${{ env.IMAGE }}-test'
+          format: 'template'
+          template: '@/contrib/sarif.tpl'
+          output: 'trivy-results.sarif'
+          exit-code: '1'
+          ignore-unfixed: true
+          vuln-type: 'os,library'
+          severity: 'HIGH,CRITICAL'
+
+      #=======================================
+      # Store Security report
+      #=======================================
+      - name: Upload Trivy scan results to GitHub Security tab
+        uses: github/codeql-action/upload-sarif@v1
+        with:
+          sarif_file: 'trivy-results.sarif'
+
+      # Publish artifact
+      - name: 'Publish artifact'
+        uses: actions/upload-artifact@v2
+        with:
+          name: published-trivy-scan
+          path: trivy-results*.sarif
+
+  publish:
+    name: 'Publish as stable'
+    runs-on: ubuntu-latest
+    needs: ['pull-for-test','security-scan']
+    steps:
+      #=======================================
+      # Tag image as stable
+      #=======================================
+      - name: checkout
+        uses: actions/checkout@v2
+      - run: echo ${{ needs.pull-for-test.outputs.output1 }}
+      - name: 'azure registry login'
+        uses: azure/docker-login@v1
+        with:
+          login-server: ${{ env.REGISTRY }}
+          username: ${{ secrets.ACR_SECRET_ID }}
+          password: ${{ secrets.ACR_SECRET_PWD }}
+      - name: 'Tag as stable'
+        run: |
+          docker pull ${{ env.REGISTRY }}/${{ env.IMAGE }}-test
+          docker tag ${{ env.REGISTRY }}/${{ env.IMAGE }}-test ${{ env.REGISTRY }}/${{ env.IMAGE }}-stable
+          docker push ${{ env.REGISTRY }}/${{ env.IMAGE }}-stable
+
+      #=======================================
+      # Generate SBOM
+      #=======================================
+      - name: 'Generate SBOM'
+        uses: anchore/sbom-action@v0
+        with:
+          image: ${{ env.REGISTRY }}/${{ env.IMAGE }}-stable
+          artifact-name: sbom.spdx
+
+      # Publish artifact
+      - name: 'Publish artifact SBOM'
+        uses: actions/upload-artifact@v2
+        with:
+          name: published-sbom
+          path: /tmp/sbom-action-**/sbom.spdx
