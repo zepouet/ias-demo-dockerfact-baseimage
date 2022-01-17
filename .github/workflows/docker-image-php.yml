@@ -64,7 +64,7 @@ jobs:
         uses: aquasecurity/trivy-action@master
         if: needs.pull-for-test.outputs.output1 == 'updated'
         with:
-          image-ref: '${{ env.REGISTRY }}/${{ env.IMAGE }}-test-test'
+          image-ref: '${{ env.REGISTRY }}/${{ env.IMAGE }}-test'
           format: 'template'
           template: '@/contrib/sarif.tpl'
           output: 'trivy-results-nofail.sarif'
@@ -80,7 +80,7 @@ jobs:
         uses: aquasecurity/trivy-action@master
         if: needs.pull-for-test.outputs.output1 == 'updated'
         with:
-          image-ref: '${{ env.REGISTRY }}/${{ env.IMAGE }}-test-test'
+          image-ref: '${{ env.REGISTRY }}/${{ env.IMAGE }}-test'
           format: 'template'
           template: '@/contrib/sarif.tpl'
           output: 'trivy-results.sarif'
@@ -136,7 +136,7 @@ jobs:
         uses: anchore/sbom-action@v0
         if: needs.pull-for-test.outputs.output1 == 'updated'
         with:
-          image: ${{ env.REGISTRY }}/${{ env.IMAGE }}-test-stable
+          image: ${{ env.REGISTRY }}/${{ env.IMAGE }}-stable
           artifact-name: sbom.spdx
 
       # Publish artifact
