@@ -2,5 +2,6 @@ schemaVersion: 2.0.0
 
 commandTests:
   - name: "id -u"
-    command: "id -u"
+    command: "bash"
+    args: [ "-c", "id -u" ]
     expectedOutput: ["33"]
