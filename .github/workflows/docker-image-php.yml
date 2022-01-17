@@ -42,7 +42,7 @@ jobs:
       - name: 'Pull then check'
         id: exec
         run: |
-          bash .github/workflows/pull-check-push.sh
+          bash .github/workflows/pull-check-push.sh ${{ env.REGISTRY }} ${{ env.IMAGE }}
 
   security-scan:
     name: 'Security scanning'
@@ -127,7 +127,7 @@ jobs:
       - name: 'Tag as stable'
         if: needs.pull-for-test.outputs.output1 == 'updated'
         run: |
-          bash .github/workflows/tag-as-stable.sh
+          bash .github/workflows/tag-as-stable.sh ${{ env.REGISTRY }} ${{ env.IMAGE }}
 
       #=======================================
       # Generate SBOM
