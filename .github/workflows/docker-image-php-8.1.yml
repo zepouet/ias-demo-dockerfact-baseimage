@@ -46,7 +46,7 @@ jobs:
         uses: brpaz/structure-tests-action@v1.1.2
         with:
           image: ${{ env.REGISTRY }}/${{ env.IMAGE }}-test
-          configFile: structure-tests.yaml
+          configFile: php/8.1/debian/structure-tests.yaml
 
   security-scan:
     name: 'Security scanning'
