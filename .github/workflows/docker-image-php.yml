@@ -59,7 +59,7 @@ jobs:
       #============================================
       # Run Trivy vulnerability scanner no severity
       #============================================
-      - run: docker pull baseartifacts.azurecr.io/${IMAGE}-test
+      - run: docker pull ${REGISTRY}/${IMAGE}-test
       - name: Run Trivy vulnerability scanner no severity
         uses: aquasecurity/trivy-action@master
         if: needs.pull-for-test.outputs.output1 == 'updated'
