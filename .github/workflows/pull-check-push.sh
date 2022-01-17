@@ -4,15 +4,12 @@ REGISTRY=$1
 IMAGE=$2
 DOCKLERFILE_PATH=$3
 
-pwd
-ls -la .
-
 docker pull ${REGISTRY}/${IMAGE}-test || true
 echo docker build -t ${IMAGE} -f Dockerfile ${DOCKLERFILE_PATH}
-docker build -t ${IMAGE} -f ${DOCKLERFILE_PATH}/Dockerfile ${DOCKLERFILE_PATH}
+docker build -t ${IMAGE}-build -f ${DOCKLERFILE_PATH}/Dockerfile ${DOCKLERFILE_PATH}
 
 DIGEST1=$(docker images --no-trunc --quiet ${REGISTRY}/${IMAGE}-test)
-DIGEST2=$(docker images --no-trunc --quiet ${IMAGE})
+DIGEST2=$(docker images --no-trunc --quiet ${IMAGE}-build)
 
 echo "DIGEST1(${REGISTRY}/${IMAGE}-test)="$DIGEST1
 echo "DIGEST2(${IMAGE})="$DIGEST2
@@ -20,7 +17,7 @@ echo "DIGEST2(${IMAGE})="$DIGEST2
 if [ "$DIGEST1" != "$DIGEST2" ]; then
   echo DIFF DETECTED. SHOW MUST GO ON
   docker rmi ${REGISTRY}/${IMAGE}-test || true
-  docker tag ${IMAGE} ${REGISTRY}/${IMAGE}-test
+  docker tag ${IMAGE}-build ${REGISTRY}/${IMAGE}-test
   docker push ${REGISTRY}/${IMAGE}-test
   echo PUSHED for test for ${IMAGE}
   echo ::set-output name=image::updated
