@@ -1,7 +1,0 @@
-schemaVersion: 2.0.0
-
-fileContentTests:
-  - name: 'Debian Sources'
-    path: '/etc/apt/sources.list'
-    expectedContents: ['.*httpredir\.debian\.org.*']
-    excludedContents: ['.*gce_debian_mirror.*']
