@@ -4,7 +4,7 @@ fileExistenceTests:
   - name: 'Root'
     path: '/'
     shouldExist: true
-    permissions: 'drwxr-xr-x'
+    permissions: 'drw-r--r--'
     uid: 0
     gid: 0
     isExecutableBy: 'group'
