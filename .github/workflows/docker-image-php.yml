@@ -7,10 +7,8 @@ name: Docker Image CI
 on:
   push:
     branches: [ main ]
-    path:
+    paths:
       - 'php/8.1/**'
-  pull_request:
-    branches: [ main ]
   # Run workflow each time code is pushed to your repository and on a schedule.
   # The scheduled workflow runs every Thursday at 15:45 UTC.
   schedule:
