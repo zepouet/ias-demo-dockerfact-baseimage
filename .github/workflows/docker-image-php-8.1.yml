@@ -43,7 +43,7 @@ jobs:
           docker build -t ${{ env.REGISTRY }}/${{ env.IMAGE }}-test -f ${{ env.DOCKLERFILE_PATH }}/Dockerfile ${{ env.DOCKLERFILE_PATH }}
           docker push ${{ env.REGISTRY }}/${{ env.IMAGE }}-test
       - name: run structure tests
-        uses: brpaz/structure-tests-action@v1
+        uses: brpaz/structure-tests-action@v1.1.2
         with:
           image: ${{ env.REGISTRY }}/${{ env.IMAGE }}-test
           configFile: structure-tests.yaml
