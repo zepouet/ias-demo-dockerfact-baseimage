@@ -54,7 +54,7 @@ jobs:
       - name: 'azure registry login'
         uses: azure/docker-login@v1
         with:
-          login-server: baseartifacts.azurecr.io
+          login-server: ${{ env.REGISTRY }}
           username: ${{ secrets.ACR_SECRET_ID }}
           password: ${{ secrets.ACR_SECRET_PWD }}
       #============================================
