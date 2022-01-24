@@ -16,7 +16,7 @@ on:
 env:
   DOCKLERFILE_PATH: php/8.1/debian
   IMAGE: php:8.1
-  REGISTRY: baseartifacts.azurecr.io
+  REGISTRY: base13114.azurecr.io
 
 jobs:
   #=====================================================================================================================
