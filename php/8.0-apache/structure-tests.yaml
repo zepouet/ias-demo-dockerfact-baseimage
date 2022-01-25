@@ -4,5 +4,5 @@ commandTests:
   - name: "id -u"
     command: "bash"
     args: [ "-c", "id -u" ]
-    #expectedOutput: ["33"]
-    expectedOutput: ["0"]
+    expectedOutput: ["33"]
+    #expectedOutput: ["0"]
