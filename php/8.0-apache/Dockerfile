@@ -5,6 +5,6 @@ COPY fake-ca.certs /tmp/fake-ca.certs
 COPY config/apache/000-default.conf /etc/apache2/sites-available
 COPY config/apache/ports.conf /etc/apache2/ports.conf
 
-RUN apt-update && apt upgrade -y apache2
+RUN apt update && apt upgrade -y apache2
 
 USER www-data
